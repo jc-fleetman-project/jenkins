@@ -84,6 +84,8 @@ spec:
       labels:
         app: jenkins
     spec:
+      securityContext:
+        fsGroup: 999    # Group ID of docker group on k8s nodes.
       containers:
         - name: jenkins
           image: jc87/myjenkins:latest
@@ -98,8 +100,8 @@ spec:
           volumeMounts:
             - name: jenkins-home
               mountPath: /var/jenkins_home
-            - name: docker-sock-volume
-              mountPath: "/var/run/docker.sock"
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
           imagePullPolicy: IfNotPresent
       volumes:
         # This allows jenkins to use the docker daemon on the host, for running builds
@@ -107,13 +109,9 @@ spec:
         - name: jenkins-home
           persistentVolumeClaim:
             claimName: jenkins-home
-#          hostPath:
-#            path: /mnt/jenkins-store
-        - name: docker-sock-volume
-          persistentVolumeClaim:
-            claimName: docker-sock-volume
-#          hostPath:
-#            path: /var/run/docker.sock
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
       serviceAccountName: jenkins
 ---
 apiVersion: v1
@@ -123,21 +121,6 @@ metadata:
   labels:
     io.kompose.service: jenkins-home
   name: jenkins-home
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 500Mi
-status: {}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  creationTimestamp: null
-  labels:
-    io.kompose.service: docker-sock-volume
-  name: docker-sock-volume
 spec:
   accessModes:
     - ReadWriteOnce
