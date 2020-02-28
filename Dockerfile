@@ -23,8 +23,8 @@ RUN  wget https://storage.googleapis.com/kubernetes-release/release/$(curl -s ht
 
 # Need to ensure the gid here matches the gid on the host node. We ASSUME (hah!) this
 # will be stable....keep an eye out for unable to connect to docker.sock in the builds
-# RUN delgroup ping && delgroup docker && addgroup -g 999 docker && addgroup jenkins docker
+RUN delgroup ping && delgroup docker && addgroup -g 999 docker && addgroup jenkins docker
 
 # See https://github.com/kubernetes/minikube/issues/956.
 # THIS IS FOR MINIKUBE TESTING ONLY - it is not production standard (we're running as root!)
-RUN chown -R root "$JENKINS_HOME" /usr/share/jenkins/ref
+#RUN chown -R root "$JENKINS_HOME" /usr/share/jenkins/ref
