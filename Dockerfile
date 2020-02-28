@@ -9,6 +9,8 @@ RUN /usr/local/bin/install-plugins.sh workflow-aggregator && \
     /usr/local/bin/install-plugins.sh simple-theme-plugin && \
     /usr/local/bin/install-plugins.sh kubernetes && \
     /usr/local/bin/install-plugins.sh docker-workflow && \
+    # TODO das plugni automatisch installieren lassen
+#    /usr/local/bin/install-plugins.sh google-kubernetes-engine-plugin && \
     /usr/local/bin/install-plugins.sh kubernetes-cli && \
     /usr/local/bin/install-plugins.sh github-branch-source
 
@@ -23,7 +25,3 @@ RUN  wget https://storage.googleapis.com/kubernetes-release/release/$(curl -s ht
 
 # gid für DockerDeamon wird festgelegt
 RUN delgroup ping && delgroup docker && addgroup -g 999 docker && addgroup jenkins docker
-
-# See https://github.com/kubernetes/minikube/issues/956.
-# THIS IS FOR MINIKUBE TESTING ONLY - it is not production standard (we're running as root!)
-#RUN chown -R root "$JENKINS_HOME" /usr/share/jenkins/ref
